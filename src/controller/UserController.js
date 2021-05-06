@@ -1,6 +1,7 @@
 const jwt = require("../config/JwtConfig");
+const User = require("../model/User");
 
-class AuthController {
+class UserController {
 
     auth(req, res, next) {
 
@@ -31,6 +32,29 @@ class AuthController {
         
     }
 
+    insertOne(req, res, next) {
+
+        try {
+
+            let user = new User();
+
+            user = req.body;
+
+            const userCreated = User.defineSequelize().create(user);
+
+            res.status(201);
+            res.send({msg: userCreated});
+            
+        } catch (error) {
+
+            console.log(error);
+            res.status(500);
+            res.send({msg: "An error has occurred on creating a User"});
+            
+        }
+
+    }
+
 }
 
-module.exports = new AuthController();
+module.exports = new UserController();

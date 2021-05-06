@@ -4,6 +4,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const route = require("../route");
 const jwt = require("./JwtConfig");
+const dbConnection = require("./DatabaseConnection");
 
 class Server {
 
@@ -12,6 +13,7 @@ class Server {
         this.app = express();
         this.setupMiddleware();
         this.app.use(route);
+        dbConnection.connect();
 
     }
 
@@ -28,7 +30,7 @@ class Server {
             res.setHeader("Access-Control-Allow-Headers" , "Content-Type");
             res.setHeader("Access-Control-Allow-Credentials" , true);
         
-            if(req.path === "/api/auth") {
+            if(req.path === "/api/user/auth") {
                 next();
 
             } else {

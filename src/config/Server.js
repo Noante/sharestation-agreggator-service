@@ -4,7 +4,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const route = require("../route");
 const jwt = require("./JwtConfig");
-const dbConnection = require("./DatabaseConnection");
 
 class Server {
 
@@ -13,7 +12,6 @@ class Server {
         this.app = express();
         this.setupMiddleware();
         this.app.use(route);
-        dbConnection.connect();
 
     }
 

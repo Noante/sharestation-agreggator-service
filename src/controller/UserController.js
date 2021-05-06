@@ -1,5 +1,5 @@
 const jwt = require("../config/JwtConfig");
-const User = require("../model/User");
+const User = require("../database/models/user");
 
 class UserController {
 
@@ -36,11 +36,9 @@ class UserController {
 
         try {
 
-            let user = new User();
+            const user = req.body;
 
-            user = req.body;
-
-            const userCreated = User.defineSequelize().create(user);
+            const userCreated = user.create(user);
 
             res.status(201);
             res.send({msg: userCreated});

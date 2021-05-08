@@ -1,5 +1,5 @@
 const jwt = require("../config/JwtConfig");
-const User = require("../database/models/user");
+const db = require("../database/models");
 
 class UserController {
 
@@ -36,12 +36,14 @@ class UserController {
 
         try {
 
+            const userDAO = db["User"];
+
             const user = req.body;
 
-            const userCreated = user.create(user);
+            const userCreated = userDAO.create(user);
 
             res.status(201);
-            res.send({msg: userCreated});
+            res.send(userCreated);
             
         } catch (error) {
 

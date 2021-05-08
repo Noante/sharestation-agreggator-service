@@ -28,7 +28,7 @@ class Server {
             res.setHeader("Access-Control-Allow-Headers" , "Content-Type");
             res.setHeader("Access-Control-Allow-Credentials" , true);
         
-            if(req.path === "/api/user/auth") {
+            if(req.path === "/api/user/auth" || req.path === "/api/user") {
                 next();
 
             } else {

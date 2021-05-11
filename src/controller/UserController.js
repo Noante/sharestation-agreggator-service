@@ -1,6 +1,7 @@
 const jwt = require("../config/JwtConfig");
 const db = require("../database/models");
 const crypto = require("crypto");
+const { validationResult } = require("express-validator");
 
 class UserController {
 
@@ -50,26 +51,37 @@ class UserController {
 
         try {
 
-            const userDAO = db["User"];
+            const validation = validationResult(req);
 
-            const userRequest = req.body;
+            if(validation.isEmpty()){
 
-            const user = await userDAO.findOne({where: {email: userRequest.email}});
+                const userDAO = db["User"];
 
-            if(user){
-                res.status(409);
-                res.send({msg: `There is a user already using the e-mail ${user.email}`});
+                const userRequest = req.body;
+
+                const user = await userDAO.findOne({where: {email: userRequest.email}});
+
+                if(user){
+                    res.status(409);
+                    res.send({msg: `There is a user already using the e-mail ${user.email}`});
+                } else {
+                    const salt = crypto.randomBytes(16).toString("hex");
+                    const hashPass = crypto.pbkdf2Sync(userRequest.password, salt, 1000, 64, "sha512").toString("hex");
+                    
+                    userRequest.password = hashPass;
+                    userRequest.salt = salt;
+
+                    userDAO.create(userRequest);
+
+                    res.status(201);
+                    res.send({msg: "User has been created with success"});
+                }
+
             } else {
-                const salt = crypto.randomBytes(16).toString("hex");
-                const hashPass = crypto.pbkdf2Sync(userRequest.password, salt, 1000, 64, "sha512").toString("hex");
-                
-                userRequest.password = hashPass;
-                userRequest.salt = salt;
 
-                userDAO.create(userRequest);
+                res.status(400);
+                res.send({msg: validation});
 
-                res.status(201);
-                res.send({msg: "User has been created with success"});
             }
             
         } catch (error) {

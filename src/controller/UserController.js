@@ -40,7 +40,7 @@ class UserController {
             }
             
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500);
             res.send({"error": error});   
         }
@@ -85,7 +85,7 @@ class UserController {
             }
             
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500);
             res.send({msg: "An error has occurred on creating a User"});    
         }

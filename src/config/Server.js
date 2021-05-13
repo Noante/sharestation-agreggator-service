@@ -2,6 +2,7 @@ require("dotenv").config({ path: ".env" });
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const proxy = require("express-http-proxy");
 const route = require("../route");
 const jwt = require("./JwtConfig");
 
@@ -13,6 +14,19 @@ class Server {
         this.setupMiddleware();
         this.app.use(route);
 
+    }
+
+    selectProxyHost(path){
+
+        let host = "";
+
+        switch (path) {
+            case "file": host = "http://localhost:3001/"; break;
+            case "email": host = "http://localhost:3002/"; break;
+            default: host = "http://localhost:3000/"; break;
+        }
+
+        return host;
     }
 
     setupMiddleware(){
@@ -37,8 +51,11 @@ class Server {
                 const jwtResponse = await jwt.verifiyToken(token);
     
                 if(jwtResponse.auth){
+
+                    const path = req.path.replace("/api/", "");
+                    const barIndex = path.indexOf("/") === -1 ? path.length : path.indexOf("/");
     
-                    next();
+                    proxy(this.selectProxyHost(path.substring(0, barIndex)))(req, res, next);
     
                 } else {
     
@@ -48,7 +65,6 @@ class Server {
                 }
 
             }
-
         
         });
 

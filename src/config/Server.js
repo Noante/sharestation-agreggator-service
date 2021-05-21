@@ -2,9 +2,10 @@ require("dotenv").config({ path: ".env" });
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const proxy = require("express-http-proxy");
 const route = require("../route");
 const jwt = require("./JwtConfig");
+const httpProxy = require("http-proxy");
+const proxyRedirect = require("../util/ProxyRedirect");
 
 class Server {
 
@@ -16,20 +17,9 @@ class Server {
 
     }
 
-    selectProxyHost(path){
-
-        let host = "";
-
-        switch (path) {
-            case "file": host = "http://localhost:3001/"; break;
-            case "email": host = "http://localhost:3002/"; break;
-            default: host = "http://localhost:3000/"; break;
-        }
-
-        return host;
-    }
-
     setupMiddleware(){
+
+        const proxy = httpProxy.createProxyServer();
 
         this.app.use(cors());
         this.app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
@@ -45,17 +35,14 @@ class Server {
             if(req.path === "/api/user/auth" || req.path === "/api/user") {
                 next();
 
-            } else {
+            } else { 
 
                 const token = req.headers["authorization"];
                 const jwtResponse = await jwt.verifiyToken(token);
     
                 if(jwtResponse.auth){
 
-                    const path = req.path.replace("/api/", "");
-                    const barIndex = path.indexOf("/") === -1 ? path.length : path.indexOf("/");
-    
-                    proxy(this.selectProxyHost(path.substring(0, barIndex)))(req, res, next);
+                    proxy.web(req, res, { target: proxyRedirect.selectProxyHost(req.path) });
     
                 } else {
     

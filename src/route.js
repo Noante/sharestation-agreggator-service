@@ -1,8 +1,6 @@
 const router = require("express").Router();
-const validator = require("./util/Validations");
-const userController = require("./controller/UserController");
+const authController = require("./controller/AuthController");
 
-router.post("/api/user/auth", userController.auth);
-router.post("/api/user", validator.user, userController.insertOne);
+router.post("/api/auth", authController.auth);
 
 module.exports = router;

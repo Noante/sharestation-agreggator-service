@@ -1,0 +1,43 @@
+version: '3.4'
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: bcd@247
+      POSTGRES_DB: db_sharestation
+    ports:
+      - '5432:5432'
+    volumes: 
+      - ./postgres-data:/Users/caiomorais/Documents/Codes/Projetos/sharestation
+    networks:
+      - sharestation-network
+  gateway-service:
+    image: gateway-service
+    restart: always
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    entrypoint: ["./entrypoint.sh"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - sharestation-network
+  user-service:
+    image: user-service
+    restart: always
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    ports:
+      - "3002:3002"
+    depends_on:
+      - gateway-service
+    networks:
+      - sharestation-network
+networks:
+    sharestation-network:
+        driver: bridge

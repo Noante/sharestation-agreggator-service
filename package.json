@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev:local": "NODE_ENV=LOCAL nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "repository": {
     "url": "https://github.com/Noante/sharestation-agreggator-service.git"

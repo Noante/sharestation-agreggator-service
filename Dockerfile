@@ -1,8 +1,8 @@
 FROM node:14
 WORKDIR /app
 
-COPY gateway-service/package*.json ./
-COPY gateway-service/. .
+COPY sharestation-gateway-service/package*.json ./
+COPY sharestation-gateway-service/. .
 
 ENV NODE_ENV=PROD
 

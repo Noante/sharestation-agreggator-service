@@ -3,9 +3,15 @@ class ProxyRedirect {
     constructor() {
 
         this.urls = {
-            file: "http://localhost:3001/",
-            user: "http://user-service:3002/",
-            email: "http://localhost:3003/"
+            file: process.env.NODE_ENV === "PROD" ? 
+                    process.env.FILE_SERVICE_PROD : 
+                    process.env.FILE_SERVICE_LOCAL,
+            user: process.env.NODE_ENV === "PROD" ? 
+                    process.env.USER_SERVICE_PROD : 
+                    process.env.USER_SERVICE_LOCAL,
+            email: process.env.NODE_ENV === "PROD" ? 
+                    process.env.EMAIL_SERVICE_PROD : 
+                    process.env.EMAIL_SERVICE_LOCAL
         };
 
     }
@@ -14,9 +20,8 @@ class ProxyRedirect {
         path = path.replace("/api/", "");
         const barIndex = path.indexOf("/") === -1 ? path.length : path.indexOf("/");
         const urlProperty = path.substring(0, barIndex);
-
-        console.log(this.urls[urlProperty] ? this.urls[urlProperty] : "http://localhost:3000/");
-        return this.urls[urlProperty] ? this.urls[urlProperty] : "http://localhost:3000/";
+        
+        return this.urls[urlProperty];
     }
 
 }

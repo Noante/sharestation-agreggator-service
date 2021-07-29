@@ -22,7 +22,7 @@ class AuthController {
                     const token = jwt.signToken({email: user.email});
                 
                     res.status(200);
-                    res.json({msg: "Authenticated with success.", token: token});
+                    res.json({msg: "Authenticated with success.", token: token, user_id: user.id});
 
                 } else {
 

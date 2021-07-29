@@ -23,11 +23,19 @@ class MiddlewareConfig {
         } else if(req.path === "/api/user") {
             this.proxy.web(req, res, { target: proxyRedirect.selectProxyHost(req.path) });
         } else { 
+
+            const proxyHost = proxyRedirect.selectProxyHost(req.path);
+
+            if(!proxyHost){
+                res.status(404);
+                return res.json({msg: `${req.path} not found`});
+            }
+
             const token = req.headers["authorization"];
             const jwtResponse = await jwt.verifiyToken(token);
 
             if(jwtResponse.auth){
-                this.proxy.web(req, res, { target: proxyRedirect.selectProxyHost(req.path) });
+                this.proxy.web(req, res, { target: proxyHost});
             } else {
                 res.status(401);
                 res.json(jwtResponse);

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "NODE_ENV=TEST jest",
     "dev": "NODE_ENV=LOCAL nodemon index.js",
-    "start": "NODE_ENV=PROD node index.js"
+    "start": "node index.js"
   },
   "repository": {
     "url": "https://github.com/Noante/sharestation-agreggator-service.git"

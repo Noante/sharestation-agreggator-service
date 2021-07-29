@@ -4,7 +4,7 @@ WORKDIR /app
 COPY gateway-service/package*.json ./
 COPY gateway-service/. .
 
-ENV NODE_ENV=LOCAL
+ENV NODE_ENV=PROD
 
 RUN npm install && \
     npm install sequelize-cli && \

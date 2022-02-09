@@ -21,4 +21,4 @@ RUN npm install && \
     chmod +x ./entrypoint.sh
 
 EXPOSE 3000
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["./wait-for-it.sh", "db:5432", "--", "./entrypoint.sh"]

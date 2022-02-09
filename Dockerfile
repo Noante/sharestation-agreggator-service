@@ -18,7 +18,8 @@ ENV EMAIL_SERVICE_PROD=http://email-service:3003/
 
 RUN npm install && \
     npm install sequelize-cli && \
-    chmod +x ./entrypoint.sh
+    chmod +x ./entrypoint.sh && \
+    chmod +x /wait-for-it.sh
 
 EXPOSE 3000
 ENTRYPOINT ["./wait-for-it.sh", "db:5432", "--", "./entrypoint.sh"]
